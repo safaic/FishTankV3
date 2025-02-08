@@ -27,6 +27,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { abort } from 'process';
+import { idID } from '@mui/material/locale';
 
 // const rows: GridRowsProp = Peram.map((row) => ({
 //   id: row.date,
@@ -95,7 +96,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
   
   const handleClick = () => {
     console.log(a)
-    if (a != true) 
+    if (a != true || rows.length === 0) 
       {
       a = true
     const maxId = Math.max(...rows.map(row => row.id));
@@ -103,13 +104,16 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
     setRows((oldRows) => [
       ...oldRows,
       { id, peram: '', level: '', isNew: true },
+     
     ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: 'peram' },
     }));
-          
-  } else {
+        
+  }
+  
+  else {
     alert("Only Add One Record at a Time");
   };
 }
@@ -192,12 +196,16 @@ export default  function PerameterChart() {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
+  
   const handleSaveClick = (id: GridRowId) =>  async() => {
+    const editedRow = rows.find((row) => row.id === id);
+
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     console.log('handleSaveClick')
-    const editedRow = rows.find((row) => row.id === id);
+    
     console.log('Thisis' + editedRow!.isNew)
     if (editedRow?.isNew === true) {
+
         a = false
     }
   };
@@ -230,6 +238,14 @@ export default  function PerameterChart() {
     // Determine if this is a new row or update
     const method = newRow.isNew ? 'POST' : 'PUT';
     
+      if (newRow.peram === undefined || newRow.level === undefined || newRow.date === undefined || newRow.id === undefined) {
+        alert("Please Enter All Fields");
+     
+        return;
+      }
+    
+
+
     const response = await fetch('/api/perameter', {
       method: method,
       headers: {
@@ -241,7 +257,7 @@ export default  function PerameterChart() {
         peram: newRow.peram,
         level: newRow.level
       }),
-      
+     
     });
 
     if (!response.ok) {
@@ -249,7 +265,7 @@ export default  function PerameterChart() {
     }
 
     const updatedRow = { ...newRow, isNew: false };
-    
+    await fetchData(); 
     return updatedRow;
   } catch (error) {
     console.error('Error saving row:', error);
@@ -269,16 +285,17 @@ const processRowDelete = async (id: GridRowId) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ id }),
-      
+     
     }
+    
   );
-
+  
     if (!response.ok) {
       throw new Error('Failed to delete record');
     }
 
     setRows(rows.filter((row) => row.id !== id));
-    
+    await fetchData(); 
   } catch (error) {
     console.error('Delete Error:', error);
   }
@@ -286,9 +303,13 @@ const processRowDelete = async (id: GridRowId) => {
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
+// On Errors
 
+const handleProcessRowUpdateError = React.useCallback((error: Error) => {
+  // console.error('Error saving row:', error);
+}, []);
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 150 },
+    { field: 'id', headerName: 'ID', width: 150, },
     { field: 'date', headerName: 'Date', width: 150, type: 'date', editable: true, },
     { field: 'peram', headerName: 'Perameter', width: 150, valueOptions: ['alk', 'mag'], editable: true, type: 'singleSelect' },
     { field: 'level', headerName: 'Value', width: 150, type: 'number' ,editable: true  },
@@ -356,6 +377,15 @@ const processRowDelete = async (id: GridRowId) => {
       }}
     >
       <DataGrid
+      initialState={{
+        columns: {
+          columnVisibilityModel: {
+            // Hide columns status and traderName, the other columns will remain visible
+            id: false,
+  
+          },
+        },
+      }}
         rows={rows}
         columns={columns}
         editMode="row"
@@ -363,7 +393,7 @@ const processRowDelete = async (id: GridRowId) => {
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
-        
+        onProcessRowUpdateError={handleProcessRowUpdateError}
         slots={{ toolbar: EditToolbar }}
         slotProps={{
           toolbar: { setRows, setRowModesModel, rowModesModel, rows },
@@ -378,7 +408,7 @@ const processRowDelete = async (id: GridRowId) => {
 }
 
 
-function setRows(initialRows: readonly GridValidRowModel[]) {
-  throw new Error('Function not implemented.');
-}
+// function setRows(initialRows: readonly GridValidRowModel[]) {
+//   throw new Error('Function not implemented.');
+// }
   
