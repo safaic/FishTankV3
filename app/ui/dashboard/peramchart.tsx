@@ -130,7 +130,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
   
 }
 
-export default  function PerameterChart() {
+export default function PerameterChart() {
 
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -238,14 +238,12 @@ export default  function PerameterChart() {
     // Determine if this is a new row or update
     const method = newRow.isNew ? 'POST' : 'PUT';
     
-      if (newRow.peram === undefined || newRow.level === undefined || newRow.date === undefined || newRow.id === undefined) {
+      if (newRow.peram === undefined || (newRow.level === undefined ||newRow.level === '') || newRow.date === undefined || newRow.id === undefined) {
         alert("Please Enter All Fields");
      
         return;
       }
     
-
-
     const response = await fetch('/api/perameter', {
       method: method,
       headers: {
@@ -266,6 +264,7 @@ export default  function PerameterChart() {
 
     const updatedRow = { ...newRow, isNew: false };
     await fetchData(); 
+    
     return updatedRow;
   } catch (error) {
     console.error('Error saving row:', error);
@@ -310,7 +309,13 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
 }, []);
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 150, },
-    { field: 'date', headerName: 'Date', width: 150, type: 'date', editable: true, },
+    { field: 'date', headerName: 'Date', width: 150, type: 'date', editable: true,valueFormatter: (value) => {
+      const date = new Date(value);
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+      const day = String(date.getUTCDate()).padStart(2, '0');
+      return `${month}/${day}/${year}`; // Format date as MM/DD/YYYY
+    } },  
     { field: 'peram', headerName: 'Perameter', width: 150, valueOptions: ['alk', 'mag'], editable: true, type: 'singleSelect' },
     { field: 'level', headerName: 'Value', width: 150, type: 'number' ,editable: true  },
     {
