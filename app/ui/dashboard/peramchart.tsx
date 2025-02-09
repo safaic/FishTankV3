@@ -369,8 +369,8 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
 
   return (
     
-    <Box
-      sx={{
+    <Box 
+      sx= {{
         height: 500,
         width: '100%',
         '& .actions': {

@@ -2,13 +2,21 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { Box } from '@mui/material';
-import Stack from '@mui/material/Stack';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { useState } from 'react';
+
 interface LineChartProps {
   width?: number;
   height?: number;
 }
 
 export default function ReusableLineChart({ width = 500, height = 300 }: LineChartProps) {
+const [startDate, setStartDate] = React.useState<Date | null>(new Date());
+const [endDate, setEndDate] = React.useState<Date | null>(new Date());
+const [value, setValue] = useState<Date | null>(null);
+
+
   const [chartData, setChartData] = React.useState<{
     dates: number[];
     alkLevels: (number | null)[];
@@ -37,17 +45,21 @@ export default function ReusableLineChart({ width = 500, height = 300 }: LineCha
             magLevels[dateIndex] = row.level / 100;
           }
         });
-
+  
         setChartData({ dates: allDates, alkLevels, magLevels });
       } catch (error) {
         console.error('Fetch Error:', error);
       }
+
+      
     };
     fetchData();
   }, []);
 
   return (
-    <Box sx={{ width: '100%', minHeight: height }}>
+    <Box sx={{ width: '100%', minHeight: height }} className="min-h-screen bg-gray-700 py-8">
+      {/* <DatePicker value={value} onChange={setValue} /> */}
+      
       <LineChart
         xAxis={[{
           data: chartData.dates,
@@ -60,12 +72,12 @@ export default function ReusableLineChart({ width = 500, height = 300 }: LineCha
         series={[
           { 
             data: chartData.alkLevels, 
-            label: 'alk',
+            label: 'Alkalinity',
             connectNulls: true,
           },
           { 
             data: chartData.magLevels, 
-            label: 'mag',
+            label: 'Magnesium',
             connectNulls: true,
           }
         ]}
