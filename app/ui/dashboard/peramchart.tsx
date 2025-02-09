@@ -31,7 +31,7 @@ import {
 import { abort } from 'process';
 import { idID } from '@mui/material/locale';
 
-
+import dayjs, { Dayjs } from 'dayjs';
 
 
 
@@ -153,8 +153,12 @@ interface ChartData {
 
 interface PerameterChartProps {
   onDataChange: (data: ChartData[]) => void;
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
+ 
+  
 }
-export default function PerameterChart({ onDataChange }: PerameterChartProps) {
+export default function PerameterChart({ onDataChange,startDate,endDate}: PerameterChartProps) {
   const [filterModel, setFilterModel] = useState<GridFilterModel>({
     items: []
   });
@@ -205,7 +209,26 @@ export default function PerameterChart({ onDataChange }: PerameterChartProps) {
       console.error('Fetch Error:', error);
     }
   };
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      const filteredRows = rows.filter(row => {
+        const rowDate = dayjs(row.date);
+        return rowDate.isAfter(startDate) && rowDate.isBefore(endDate);
+      });
+      setRows(filteredRows);
+      const chartData = filteredRows.map(row => ({
+        id: row.id as number,
+        date: row.date as string,
+        peram: row.peram as string,
+        level: row.level as number
+      }));
+      onDataChange(chartData);
+    }
+  }, [startDate, endDate]);
+
   // Add useEffect to fetch data
+
   React.useEffect(() => {
     if (initialFetch.current) {
     const fetchData = async () => {
@@ -238,7 +261,7 @@ export default function PerameterChart({ onDataChange }: PerameterChartProps) {
     fetchData();
     initialFetch.current = false;
   }
-}, []); // Empty dependency array to ensure this runs only once
+}, []); 
 
   
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {

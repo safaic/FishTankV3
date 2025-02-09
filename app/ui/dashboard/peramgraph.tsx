@@ -69,8 +69,7 @@ export default function ReusableLineChart({ width = 500, height = 300, data }: L
         width={width}
         height={height}
         slotProps={{
-          legend: {
-           
+          legend: {        
             position: {
               vertical: 'top',
               horizontal: 'right',

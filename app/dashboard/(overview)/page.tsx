@@ -1,5 +1,4 @@
 'use client';
-import { DarkThemeProvider } from '@/app/ui/themes/dark';
 import dynamic from 'next/dynamic';
 import { Suspense, useState } from 'react';
 import { Box, Container, Paper } from '@mui/material';
@@ -8,6 +7,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Nerko_One } from 'next/font/google';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
+
 const PerameterChart = dynamic(
   () => import('@/app/ui/dashboard/peramchart'),
 );
@@ -35,7 +40,11 @@ export default function Page() {
     const day = String(date.getUTCDate()).padStart(2, '0');
     return `${month}/${day}/${year}`;
   };
-  
+  const [perameter, setPerameter] = useState('');
+
+  // const handlePeramFilterChange = (event: SelectChangeEvent) => {
+  //   setPerameter(event.target.value);
+  // };
 
   const handleStartDateChange = (newValue: Dayjs | null) => {
     setStartDate(newValue);
@@ -47,8 +56,6 @@ export default function Page() {
     setEndDate(newValue);
    console.log(formatDate(newValue));
   };
-
-
 
   const handleDataChange = (data: ChartData[]) => {
     setChartData(data);
@@ -81,20 +88,45 @@ export default function Page() {
                     Loading...
                   </div>
                 }>
-                  <PerameterChart onDataChange={handleDataChange} />
+                  <PerameterChart onDataChange={handleDataChange} startDate={startDate} endDate={endDate} peramValue={'alk'} />
                 </Suspense>
               </Box>
               <Box sx={{ ml: 2 }}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Box display="flex" flexDirection="column" gap={2}>
-                    <DatePicker label="Start Date"  value={startDate}
-                      onChange={handleStartDateChange}/>
-                    <DatePicker label="End Date" value={endDate}
-                      onChange={handleEndDateChange}
-                      disabled={!startDate} // Disable if no start date
-                      minDate={startDate || undefined}/>
-                  </Box>
-                </LocalizationProvider>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Box display="flex" flexDirection="column" gap={2}>
+                      <DatePicker 
+                        label="Start Date"  
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                      />
+                      <DatePicker 
+                        label="End Date" 
+                        value={endDate}
+                        onChange={handleEndDateChange}
+                        disabled={!startDate}
+                        minDate={startDate || undefined}
+                      />
+                    </Box>
+                  </LocalizationProvider>
+                  <FormControl sx={{ minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-helper-label">Element Selection</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-helper-label"
+                      id="demo-simple-select-helper"
+                      value={perameter}
+                      label="Element Selection"
+                     
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={'Alkinity'}>Alkinity</MenuItem>
+                      <MenuItem value={'Magnesium'}>Magnesium</MenuItem>
+                      <MenuItem value={'Calcium'}>Calcium</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
               </Box>
             </Box>
           </Paper>
