@@ -8,8 +8,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
-
-
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { useEffect, useState, useRef } from 'react';
+import { GridFilterModel } from '@mui/x-data-grid'
 import {
   GridRowsProp,
   GridRowModesModel,
@@ -28,6 +30,10 @@ import {
 } from '@mui/x-data-grid';
 import { abort } from 'process';
 import { idID } from '@mui/material/locale';
+
+
+
+
 
 // const rows: GridRowsProp = Peram.map((row) => ({
 //   id: row.date,
@@ -79,6 +85,8 @@ import { idID } from '@mui/material/locale';
 // }));
 
 
+
+
 var a = false
 declare module '@mui/x-data-grid' {
   interface ToolbarPropsOverrides {
@@ -88,6 +96,8 @@ declare module '@mui/x-data-grid' {
     ) => void;
     rowModesModel: GridRowModesModel;
     rows: GridRowsProp;
+    
+    
   }
 }
 
@@ -121,20 +131,57 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
 
 
   return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+    <GridToolbarContainer > 
+      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}  >
         Add record
       </Button>
     </GridToolbarContainer>
   );
   
 }
+interface FilterState {
+  columnField: string;
+  value: string;
+}
 
-export default function PerameterChart() {
+interface ChartData {
+  id: number;
+  date: string;
+  peram: string;
+  level: number;
+}
 
+interface PerameterChartProps {
+  onDataChange: (data: ChartData[]) => void;
+}
+export default function PerameterChart({ onDataChange }: PerameterChartProps) {
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({
+    items: []
+  });
+
+  const formatDate = (value: any) => {
+    const date = new Date(value);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    return `${month}/${day}/${year}`;
+  };
+  
+  const handleFilterChange = (model: GridFilterModel) => {
+    setFilterModel(model);
+    model.items.forEach((item) => {
+      if (item.field === 'date') {
+        console.log('Date Filter:', formatDate(item.value));
+      } else {
+        console.log('Filter:', item.field, item.value);
+      }
+    });
+    console.log('Filter Model:', model);
+  };
+ 
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
-
+  const initialFetch = useRef(true);
   const fetchData = async () => {
     try {
       const response = await fetch('/api/perameter');
@@ -143,6 +190,7 @@ export default function PerameterChart() {
       }
       
       const data = await response.json();
+      onDataChange(data);
       console.log('API Response:', data);
       
       const initialRows = data.map((row: any) => ({
@@ -159,6 +207,7 @@ export default function PerameterChart() {
   };
   // Add useEffect to fetch data
   React.useEffect(() => {
+    if (initialFetch.current) {
     const fetchData = async () => {
       try {
         const response = await fetch('/api/perameter');
@@ -167,6 +216,7 @@ export default function PerameterChart() {
         }
         
         const data = await response.json();
+        
         console.log('API Response:', data);
         
         const initialRows = data.map((row: any) => ({
@@ -177,13 +227,18 @@ export default function PerameterChart() {
         }));
         
         setRows(initialRows);
+        onDataChange(data); // Pass initial data to parent
+
       } catch (error) {
         console.error('Fetch Error:', error);
       }
+      
     };
   
     fetchData();
-  }, []);
+    initialFetch.current = false;
+  }
+}, []); // Empty dependency array to ensure this runs only once
 
   
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
@@ -309,27 +364,27 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
 }, []);
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 150, },
-    { field: 'date', headerName: 'Date', width: 150, type: 'date', editable: true,valueFormatter: (value) => {
+    { field: 'date', headerName: 'Date', width: 150,align: 'left', type: 'date', resizable: false, editable: true,valueFormatter: (value) => {
       const date = new Date(value);
       const year = date.getUTCFullYear();
       const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed
       const day = String(date.getUTCDate()).padStart(2, '0');
       return `${month}/${day}/${year}`; // Format date as MM/DD/YYYY
-    } },  
-    { field: 'peram', headerName: 'Perameter', width: 150, valueOptions: ['alk', 'mag'], editable: true, type: 'singleSelect' },
-    { field: 'level', headerName: 'Value', width: 150, type: 'number' ,editable: true  },
+    }, },  
+    { field: 'peram', headerName: 'Perameter', width: 100, valueOptions: ['alk', 'mag'], editable: true,resizable: false, type: 'singleSelect' },
+    { field: 'level', headerName: 'Value', width: 100, type: 'number' ,resizable: false,editable: true  },
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: 180,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
        
         if (isInEditMode) {
           return [
-            <GridActionsCellItem
+            <GridActionsCellItem 
               icon={<SaveIcon />}
               label="Save"
               sx={{
@@ -358,9 +413,9 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={() => processRowDelete(id)}
-            
+            onClick={() => processRowDelete(id)}         
             color="inherit"
+            
           />,
         ];
       },
@@ -369,10 +424,12 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
 
   return (
     
+      
     <Box 
       sx= {{
-        height: 500,
+        height: '100%',
         width: '100%',
+        
         '& .actions': {
           color: 'text.secondary',
         },
@@ -381,13 +438,29 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
         },
       }}
     >
-      <DataGrid
+      <DataGrid  
+      sx= {{
+        height: '100%',
+        width: '75%',
+        
+        '& .actions': {
+          color: 'text.secondary',
+        },
+        '& .textPrimary': {
+          color: 'text.primary',
+        },
+      }}
+      filterModel={filterModel}
+      onFilterModelChange={handleFilterChange}
       initialState={{
         columns: {
           columnVisibilityModel: {
-            // Hide columns status and traderName, the other columns will remain visible
             id: false,
-  
+          },
+        },
+        filter: {
+          filterModel: {
+            items: [],
           },
         },
       }}
@@ -404,10 +477,10 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
           toolbar: { setRows, setRowModesModel, rowModesModel, rows },
         }}
         
-        
+       
       />
     </Box>
-    
+
   );
   
 }
