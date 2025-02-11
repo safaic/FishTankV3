@@ -7,8 +7,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { DarkThemeProvider } from '@/app/ui/themes/dark';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  { name: 'Dashboard', href: '/dashboard', icon: DashboardIcon },
   {
     name: 'Fish',
     href: '/dashboard/fish',

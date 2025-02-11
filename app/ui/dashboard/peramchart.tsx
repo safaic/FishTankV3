@@ -35,56 +35,6 @@ import dayjs, { Dayjs } from 'dayjs';
 
 
 
-// const rows: GridRowsProp = Peram.map((row) => ({
-//   id: row.date,
-//   date: row.date,
-//   peram: row.peram,
-//   level: row.level,
-// }));
-
-// const columns: GridColDef[] = [
-//   { field: 'date', headerName: 'Date', width: 150 },
-//   { field: 'peram', headerName: 'Perameter', width: 150 },
-//   { field: 'level', headerName: 'Value', width: 150 },
-// ];
-
-// export default function PerameterChart() {
-//   return (
-//     <div style={{ height: 300, width: '100%' }}>
-//       <DataGrid rows={rows} columns={columns} />
-//     </div>
-//   );
-// }
-
-// function dataComponent() { 
-
-//   React.useEffect(() => {
-//     const fetchData = async () => {
-//       const response = await fetch('/api/perameter');
-//       const data = await response.json();
-//       const initialRows: GridRowsProp = data.map((row: { id: number; date: string; peram: string; level: number }) => ({
-//         id: row.id,
-//         date: row.date,
-//         peram: row.peram,
-//         level: row.level,
-//       }));
-//       setRows(initialRows);
-//       console.log(JSON.stringify(initialRows))
-//     };
-
-//     fetchData();
-//   }, []);
-// }
-
-
-// const initialRows: GridRowsProp = Peram.map((row) => ({
-//   id: row.id,
-//   date: row.date,
-//   peram: row.peram,
-//   level: row.level,
-// }));
-
-
 
 
 var a = false
@@ -155,14 +105,15 @@ interface PerameterChartProps {
   onDataChange: (data: ChartData[]) => void;
   startDate: Dayjs | null;
   endDate: Dayjs | null;
- 
-  
+  peramValue: string | null;
+
 }
-export default function PerameterChart({ onDataChange,startDate,endDate}: PerameterChartProps) {
+export default function PerameterChart({ onDataChange,startDate,endDate,peramValue}: PerameterChartProps) {
   const [filterModel, setFilterModel] = useState<GridFilterModel>({
     items: []
   });
-
+  const [originalRows, setOriginalRows] = useState<GridRowsProp>([]);
+  
   const formatDate = (value: any) => {
     const date = new Date(value);
     const year = date.getUTCFullYear();
@@ -194,7 +145,7 @@ export default function PerameterChart({ onDataChange,startDate,endDate}: Perame
       }
       
       const data = await response.json();
-      onDataChange(data);
+      
       console.log('API Response:', data);
       
       const initialRows = data.map((row: any) => ({
@@ -203,60 +154,49 @@ export default function PerameterChart({ onDataChange,startDate,endDate}: Perame
         peram: row.peram,
         level: row.level,
       }));
-      
-      setRows(initialRows);
+     
+    
+      setOriginalRows(initialRows);  
+      setRows(initialRows);       
+      onDataChange(data);          
+
     } catch (error) {
       console.error('Fetch Error:', error);
     }
   };
 
-  useEffect(() => {
-    if (startDate && endDate) {
-      const filteredRows = rows.filter(row => {
-        const rowDate = dayjs(row.date);
-        return rowDate.isAfter(startDate) && rowDate.isBefore(endDate);
-      });
-      setRows(filteredRows);
-      const chartData = filteredRows.map(row => ({
-        id: row.id as number,
-        date: row.date as string,
-        peram: row.peram as string,
-        level: row.level as number
-      }));
-      onDataChange(chartData);
-    }
-  }, [startDate, endDate]);
 
-  // Add useEffect to fetch data
+useEffect(() => {
+  // Always start with complete dataset
+  let filteredRows = [...originalRows];
+  if (startDate && endDate) {
+    filteredRows = filteredRows.filter(row => {
+      const rowDate = dayjs(row.date);
+      return rowDate.isAfter(startDate) && rowDate.isBefore(endDate);
+    });
+  }
+  
+  if (peramValue) {
+    // Can filter on complete dataset, not just date-filtered rows
+    filteredRows = filteredRows.filter(row => row.peram === peramValue);
+  }
+  
+  setRows(filteredRows);
+
+  const data = filteredRows.map((row: any) => ({
+    id: row.id,
+    date: formatDate(row.date),
+    peram: row.peram,
+    level: row.level,
+  }));
+
+  onDataChange(data);
+
+
+}, [startDate, endDate, peramValue, originalRows]);
 
   React.useEffect(() => {
     if (initialFetch.current) {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/perameter');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        console.log('API Response:', data);
-        
-        const initialRows = data.map((row: any) => ({
-          id: row.id,
-          date: new Date(row.date),
-          peram: row.peram,
-          level: row.level,
-        }));
-        
-        setRows(initialRows);
-        onDataChange(data); // Pass initial data to parent
-
-      } catch (error) {
-        console.error('Fetch Error:', error);
-      }
-      
-    };
   
     fetchData();
     initialFetch.current = false;
@@ -394,7 +334,7 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
       const day = String(date.getUTCDate()).padStart(2, '0');
       return `${month}/${day}/${year}`; // Format date as MM/DD/YYYY
     }, },  
-    { field: 'peram', headerName: 'Perameter', width: 100, valueOptions: ['alk', 'mag'], editable: true,resizable: false, type: 'singleSelect' },
+    { field: 'peram', headerName: 'Perameter', width: 100, valueOptions: ['alk', 'mag', 'ca'], editable: true,resizable: false, type: 'singleSelect' },
     { field: 'level', headerName: 'Value', width: 100, type: 'number' ,resizable: false,editable: true  },
     {
       field: 'actions',

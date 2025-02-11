@@ -16,6 +16,6 @@ export type FishTable = {
 export type PeramTable = { 
     id: number;
     date: Date;
-    peram: 'alk' | 'mag';
+    peram: 'alk' | 'mag' | 'ca';
     level: number;
   };

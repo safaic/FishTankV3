@@ -22,12 +22,14 @@ export default function ReusableLineChart({ width = 500, height = 300, data }: L
     dates: number[];
     alkLevels: (number | null)[];
     magLevels: (number | null)[];
-  }>({ dates: [], alkLevels: [], magLevels: [] });
+    caLevels: (number | null)[];
+  }>({ dates: [], alkLevels: [], magLevels: [], caLevels: [] });
 
   useEffect(() => {
     const allDates = [...new Set(data.map((row: any) => new Date(row.date).getTime()))].sort();
     const alkLevels = new Array(allDates.length).fill(null);
     const magLevels = new Array(allDates.length).fill(null);
+    const caLevels = new Array(allDates.length).fill(null);
 
     data.forEach((row: any) => {
       const dateIndex = allDates.indexOf(new Date(row.date).getTime());
@@ -35,10 +37,12 @@ export default function ReusableLineChart({ width = 500, height = 300, data }: L
         alkLevels[dateIndex] = row.level;
       } else if (row.peram === 'mag') {
         magLevels[dateIndex] = row.level / 100;
+      } else if (row.peram === 'ca') {
+        caLevels[dateIndex] = row.level / 100;
       }
     });
-
-    setChartData({ dates: allDates, alkLevels, magLevels });
+    
+    setChartData({ dates: allDates, alkLevels, magLevels, caLevels });
   }, [data]);
 
   return (
@@ -63,6 +67,12 @@ export default function ReusableLineChart({ width = 500, height = 300, data }: L
             color: 'rgb(213, 90, 2)',
             data: chartData.magLevels, 
             label: 'Magnesium',
+            connectNulls: true,
+          },
+          { 
+            color: 'rgb(213, 2, 213)',
+            data: chartData.caLevels, 
+            label: 'Calcium',
             connectNulls: true,
           }
         ]}

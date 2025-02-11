@@ -42,9 +42,9 @@ export default function Page() {
   };
   const [perameter, setPerameter] = useState('');
 
-  // const handlePeramFilterChange = (event: SelectChangeEvent) => {
-  //   setPerameter(event.target.value);
-  // };
+  const handlePeramFilterChange = (event: SelectChangeEvent) => {
+    setPerameter(event.target.value);
+  };
 
   const handleStartDateChange = (newValue: Dayjs | null) => {
     setStartDate(newValue);
@@ -88,7 +88,7 @@ export default function Page() {
                     Loading...
                   </div>
                 }>
-                  <PerameterChart onDataChange={handleDataChange} startDate={startDate} endDate={endDate} peramValue={'alk'} />
+                  <PerameterChart onDataChange={handleDataChange} startDate={startDate} endDate={endDate} peramValue={perameter} />
                 </Suspense>
               </Box>
               <Box sx={{ ml: 2 }}>
@@ -116,13 +116,14 @@ export default function Page() {
                       id="demo-simple-select-helper"
                       value={perameter}
                       label="Element Selection"
+                      onChange={handlePeramFilterChange}
                      
                     >
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value={'Alkinity'}>Alkinity</MenuItem>
-                      <MenuItem value={'Magnesium'}>Magnesium</MenuItem>
+                      <MenuItem value={'alk'}>Alkinity</MenuItem>
+                      <MenuItem value={'mag'}>Magnesium</MenuItem>
                       <MenuItem value={'Calcium'}>Calcium</MenuItem>
                     </Select>
                   </FormControl>
