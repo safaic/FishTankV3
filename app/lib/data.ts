@@ -9,7 +9,7 @@ import { createClient } from '@/app/utils/subabase/server'
   // const { data, error } = await supabase.auth.getUser()
 
 
-export async function fetchPerameter() {
+export async function fetchPerameter(userID:string) {
   try {
     const perameters = await sql<PeramTable[]>`
       SELECT 
@@ -17,7 +17,7 @@ export async function fetchPerameter() {
         "tbl_Peram".test_date as date, 
         "tbl_Peram".category as peram, 
         "tbl_Peram".value as level 
-      FROM "tbl_Peram" 
+      FROM "tbl_Peram" where "tbl_Peram"."userID" = ${userID}
       ORDER BY test_date DESC
     `;
     return perameters;

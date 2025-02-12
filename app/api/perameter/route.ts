@@ -8,8 +8,14 @@ import { createClient } from '@/app/utils/subabase/server'
 
 export async function GET() {
   try {
-    const data = await fetchPerameter();
-    return NextResponse.json(data);
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    
+    if (!data.user?.id) {
+      throw new Error('No authenticated user');
+    }
+    const data3 = await fetchPerameter(data.user.id);
+    return NextResponse.json(data3);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
   }
