@@ -2,6 +2,13 @@ import postgres from 'postgres';
 import { PeramTable} from './definitions';
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
+import { createClient } from '@/app/utils/subabase/server'
+
+  // const supabase = await createClient()
+
+  // const { data, error } = await supabase.auth.getUser()
+
+
 export async function fetchPerameter() {
   try {
     const perameters = await sql<PeramTable[]>`
@@ -10,7 +17,7 @@ export async function fetchPerameter() {
         "tbl_Peram".test_date as date, 
         "tbl_Peram".category as peram, 
         "tbl_Peram".value as level 
-      FROM "tbl_Peram"
+      FROM "tbl_Peram" 
       ORDER BY test_date DESC
     `;
     return perameters;
@@ -20,11 +27,11 @@ export async function fetchPerameter() {
   }
 }
 
-  export async function deletePerameter(id: number) {
+  export async function deletePerameter(id: number, userID:string ) {
     try {
       await sql`
         DELETE FROM "tbl_Peram" 
-        WHERE id = ${id}
+        WHERE id = ${id} and userID = ${userID} 
       `;
       return { success: true };
     } catch (err) {
@@ -50,7 +57,7 @@ export async function fetchPerameter() {
   }
   
   export async function updatePerameter(
-    data: { id: number; date: Date; peram: string; level: number }
+    data: { id: number; date: Date; peram: string; level: number }, userID: string
   ) {
     try {
       const updatedPerameter = await sql<PeramTable[]>`
@@ -60,6 +67,7 @@ export async function fetchPerameter() {
           category = ${data.peram},
           value = ${data.level}
         WHERE id = ${data.id}
+        and userID = ${userID}
         RETURNING id, test_date as date, category as peram, value as level
       `;
       return updatedPerameter[0];

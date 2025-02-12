@@ -11,7 +11,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-
+import Skeleton from '@mui/material/Skeleton';
+import { RevenueChartSkeleton} from '@/app/ui/skeleton';
 
 const PerameterChart = dynamic(
   () => import('@/app/ui/dashboard/peramchart'),
@@ -69,25 +70,21 @@ export default function Page() {
       <Box className="min-h-screen bg-gray-200 py-8">
         <Container maxWidth="lg">
           <Paper elevation={3} className="bg-gray-200 p-6 mb-6">
-            <Suspense fallback={
-              <div className="flex justify-center items-center h-40 text-gray-200">
-                Loading...
-              </div>
-            }>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', minWidth: '800px' }}>
+            <Suspense fallback={<Skeleton />}>
+     
+        
                 <ReusableLineChart key={refreshTrigger} data={chartData} />
               
             </Suspense>
+            </Box>
           </Paper>
 
      
           <Paper elevation={3} className="bg-gray-200 p-6 mb-6">
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', minWidth: '800px' }}>
               <Box sx={{ flex: 1 }}>
-                <Suspense fallback={
-                  <div className="flex justify-center items-center h-40 text-gray-400">
-                    Loading...
-                  </div>
-                }>
+              <Suspense fallback={<RevenueChartSkeleton />}> 
                   <PerameterChart onDataChange={handleDataChange} startDate={startDate} endDate={endDate} peramValue={perameter} />
                 </Suspense>
               </Box>
