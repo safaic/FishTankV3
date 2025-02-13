@@ -27,7 +27,7 @@ export async function fetchPerameter(userID:string) {
     try {
       await sql`
         DELETE FROM "tbl_Peram" 
-        WHERE id = ${id} and userID = ${userID} 
+        WHERE id = ${id} and "tbl_Peram"."userID" = ${userID} 
       `;
       return { success: true };
     } catch (err) {
@@ -41,7 +41,7 @@ export async function fetchPerameter(userID:string) {
   ) {
     try {
       const newPerameter = await sql<PeramTable[]>`
-        INSERT INTO "tbl_Peram" (test_date, category, value)
+        INSERT INTO "tbl_Peram" (test_date, category, value,"userID")
         VALUES (${data.date}, ${data.peram}, ${data.level}, ${userID})
         RETURNING id, test_date as date, category as peram, value as level
       `;
@@ -63,7 +63,7 @@ export async function fetchPerameter(userID:string) {
           category = ${data.peram},
           value = ${data.level}
         WHERE id = ${data.id}
-        and userID = ${userID}
+        and "tbl_Peram"."userID" = ${userID}
         RETURNING id, test_date as date, category as peram, value as level
       `;
       return updatedPerameter[0];
