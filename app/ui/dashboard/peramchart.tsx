@@ -326,7 +326,7 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
       const day = String(date.getUTCDate()).padStart(2, '0');
       return `${month}/${day}/${year}`; // Format date as MM/DD/YYYY
     }, },  
-    { field: 'peram', headerName: 'Perameter', width: 100, valueOptions: ['alk', 'mag', 'ca'], editable: true,resizable: false, type: 'singleSelect' },
+    { field: 'peram', headerName: 'Parameter', width: 100, valueOptions: ['alk', 'mag', 'ca'], editable: true,resizable: false, type: 'singleSelect' },
     { field: 'level', headerName: 'Value', width: 100, type: 'number' ,resizable: false,editable: true  },
     {
       field: 'actions',
