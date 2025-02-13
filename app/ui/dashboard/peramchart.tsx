@@ -8,6 +8,8 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import { useEffect, useState, useRef } from 'react';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 import { GridFilterModel } from '@mui/x-data-grid'
 import {
   GridRowsProp,
@@ -103,7 +105,8 @@ export default function PerameterChart({ onDataChange,startDate,endDate,peramVal
     items: []
   });
   const [originalRows, setOriginalRows] = useState<GridRowsProp>([]);
-  
+  const [skeletonController, setSkeletonController] = useState(true);
+
   const formatDate = (value: any) => {
     const date = new Date(value);
     const year = date.getUTCFullYear();
@@ -127,6 +130,7 @@ export default function PerameterChart({ onDataChange,startDate,endDate,peramVal
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const initialFetch = useRef(true);
+
   const fetchData = async () => {
     try {
       const response = await fetch('/api/perameter');
@@ -148,8 +152,13 @@ export default function PerameterChart({ onDataChange,startDate,endDate,peramVal
     
       setOriginalRows(initialRows);  
       setRows(initialRows);       
-      onDataChange(data);          
-
+      onDataChange(data); 
+      if (skeletonController === true) {
+        setSkeletonController(false);
+      }
+      
+      
+      
     } catch (error) {
       console.error('Fetch Error:', error);
     }
@@ -187,8 +196,7 @@ useEffect(() => {
 
   React.useEffect(() => {
     if (initialFetch.current) {
-  
-    fetchData();
+     fetchData();
     initialFetch.current = false;
   }
 }, []); 
@@ -395,60 +403,50 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
         },
       }}
     >
-      <DataGrid  
-
- 
-      sx= {{
-        height: '100%',
-        width: '100%',   
-  
-        
-        '& .actions': {
-          color: 'text.secondary',
-        },
-        '& .textPrimary': {
-          color: 'text.primary',
-        },
-        
-      }}
-      filterModel={filterModel}
-      onFilterModelChange={handleFilterChange}
-      initialState={{
-        columns: {
-          columnVisibilityModel: {
-            id: false,
-          },
-        },
-        filter: {
-          filterModel: {
-            items: [],
-          },
-        },
-        sorting: {
-          sortModel: [{ field: 'id', sort: 'desc' }],
-        },
-      }}
-        rows={rows}
-        columns={columns}
-        editMode="row"
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-        onProcessRowUpdateError={handleProcessRowUpdateError}
-        slots={{ toolbar: EditToolbar }}
-        slotProps={{ 
-          toolbar: { setRows, setRowModesModel, rowModesModel, rows },
-        }}
-        
-       
-      />
       
+      {skeletonController ? (
+        <Stack spacing={1}>
+        {/* For variant="text", adjust the height via font-size */}
+        <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+  
+        {/* For other variants, adjust the size with `width` and `height` */}
+        <Skeleton variant="circular" width={40} height={40} />
+        <Skeleton variant="rectangular" width={210} height={60} />
+        <Skeleton variant="rounded" width={210} height={60} />
+      </Stack>
+      ) : (
+        <DataGrid
+          sx={{
+            height: '100%',
+            width: '100%',
+            '& .actions': {
+              color: 'text.secondary',
+            },
+            '& .textPrimary': {
+              color: 'text.primary',
+            },
+          }}
+          rows={rows}
+          columns={columns}
+          editMode="row"
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+          onProcessRowUpdateError={handleProcessRowUpdateError}
+          slots={{ toolbar: EditToolbar }}
+          slotProps={{ 
+            toolbar: { setRows, setRowModesModel, rowModesModel, rows },
+          }}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'desc' }],
+            },
+          }}
+        />
+      )}
     </Box>
-    
   );
-  
-  
 }
 
 
