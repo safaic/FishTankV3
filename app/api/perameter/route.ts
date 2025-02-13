@@ -22,9 +22,15 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    
+    if (!data.user?.id) {
+      throw new Error('No authenticated user');
+    }
     const body = await request.json();
-    const data = await createPerameter(body);
-    return NextResponse.json(data);
+    const data3 = await createPerameter(body,data.user.id);
+    return NextResponse.json(data3);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create record' }, { status: 500 });
   }
