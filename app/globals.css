@@ -2,7 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dark Theme Scrollbars */
+:root {
+  color-scheme: dark;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  background: transparent;
+}
 
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  border-radius: 10px;
+  border-top-left-radius: 0;
+   border-bottom-left-radius: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+   border-bottom-left-radius: 0;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #404040;
+}
+
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-corner {
+  display: none;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333333 transparent;
+}
+/* Input Styles */
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Material Design Elevations */
+.md-elevation-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.md-elevation-2 {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.md-elevation-3 {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+/* Material Design Transitions */
+.md-transition {
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
 
 /* :root{ 
 
@@ -25,7 +91,7 @@ input[type='number']::-webkit-outer-spin-button {
 } */
 
 
-.light {
+/* .light {
   --background: 245, 245, 245;
 
   --border: 212, 212, 212;
@@ -55,27 +121,9 @@ input[type='number']::-webkit-outer-spin-button {
   --cta-text: 255, 255, 255;
 
   background: rgba(var(--background));
-}
+} */
 
-.red {
-  --background: 254, 202, 202;
 
-  --border: 185, 28, 28;
-  --card: 239, 68, 68;
-
-  --copy-primary: 250, 250, 250;
-  --copy-secondary: 254, 226, 226;
-
-  --cta: 250, 250, 250;
-  --cta-active: 254, 226, 226;
-  --cta-text: 239, 68, 68;
-
-  background: rgba(var(--background));
-}
-
-:root {
-  --grape: 114, 35, 204;
-}
 
 /* :root {
   --background: 245, 245, 245;

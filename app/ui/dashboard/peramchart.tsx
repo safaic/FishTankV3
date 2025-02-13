@@ -27,8 +27,6 @@ import dayjs, { Dayjs } from 'dayjs';
 
 
 
-
-
 var a = false
 declare module '@mui/x-data-grid' {
   interface ToolbarPropsOverrides {
@@ -380,9 +378,9 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
     },
   ];
 
-  return (
+  return  (
     
-      
+    
     <Box 
       sx= {{
  
@@ -398,10 +396,12 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
       }}
     >
       <DataGrid  
+
+ 
       sx= {{
         height: '100%',
-        width: '100%',
-   
+        width: '100%',   
+  
         
         '& .actions': {
           color: 'text.secondary',
@@ -409,6 +409,7 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
         '& .textPrimary': {
           color: 'text.primary',
         },
+        
       }}
       filterModel={filterModel}
       onFilterModelChange={handleFilterChange}
@@ -442,9 +443,11 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
         
        
       />
+      
     </Box>
-
+    
   );
+  
   
 }
 
