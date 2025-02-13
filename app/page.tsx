@@ -3,10 +3,8 @@
 import Link from 'next/link';
 import styles from '@/app/ui/home.module.css';
 import { lusitana } from  '@/app/ui/fonts';
-import Image from 'next/image';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { DarkThemeProvider } from '@/app/ui/themes/dark';
+
+
 export default function Page() {
   return (
 

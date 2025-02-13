@@ -2,7 +2,10 @@ import postgres from 'postgres';
 import { PeramTable} from './definitions';
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
-export async function fetchPerameter() {
+
+
+
+export async function fetchPerameter(userID:string) {
   try {
     const perameters = await sql<PeramTable[]>`
       SELECT 
@@ -10,25 +13,25 @@ export async function fetchPerameter() {
         "tbl_Peram".test_date as date, 
         "tbl_Peram".category as peram, 
         "tbl_Peram".value as level 
-      FROM "tbl_Peram"
+      FROM "tbl_Peram" where "tbl_Peram"."userID" = ${userID}
       ORDER BY test_date DESC
     `;
     return perameters;
   } catch (err) {
-    console.error('Database Error:', err);
+    // console.error('Database Error:', err);
     throw new Error('Failed to fetch perameters.');
   }
 }
 
-  export async function deletePerameter(id: number) {
+  export async function deletePerameter(id: number, userID:string ) {
     try {
       await sql`
         DELETE FROM "tbl_Peram" 
-        WHERE id = ${id}
+        WHERE id = ${id} and userID = ${userID} 
       `;
       return { success: true };
     } catch (err) {
-      console.error('Database Error:', err);
+      // console.error('Database Error:', err);
       throw new Error('Failed to delete perameter.');
     }
   }
@@ -44,13 +47,13 @@ export async function fetchPerameter() {
       `;
       return newPerameter[0];
     } catch (err) {
-      console.error('Database Error:', err);
+      // console.error('Database Error:', err);
       throw new Error('Failed to create perameter.');
     }
   }
   
   export async function updatePerameter(
-    data: { id: number; date: Date; peram: string; level: number }
+    data: { id: number; date: Date; peram: string; level: number }, userID: string
   ) {
     try {
       const updatedPerameter = await sql<PeramTable[]>`
@@ -60,11 +63,12 @@ export async function fetchPerameter() {
           category = ${data.peram},
           value = ${data.level}
         WHERE id = ${data.id}
+        and userID = ${userID}
         RETURNING id, test_date as date, category as peram, value as level
       `;
       return updatedPerameter[0];
     } catch (err) {
-      console.error('Database Error:', err);
+      // console.error('Database Error:', err);
       throw new Error('Failed to update perameter.');
     }
   }
