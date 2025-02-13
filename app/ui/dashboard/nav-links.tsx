@@ -1,12 +1,10 @@
 "use client";
 import {
-  HomeIcon,
   DocumentDuplicateIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-import { DarkThemeProvider } from '@/app/ui/themes/dark';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 const links = [
   { name: 'Dashboard', href: '/dashboard', icon: DashboardIcon },

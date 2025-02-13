@@ -1,8 +1,10 @@
 'use server';
  
 import { signIn } from '@/auth';
+import { redirect } from 'next/navigation'
 import { AuthError } from 'next-auth';
- 
+import { createClient } from '@/app/utils/subabase/server'
+
 // ...
  
 export async function authenticate(
@@ -22,4 +24,15 @@ export async function authenticate(
     }
     throw error;
   }
+}
+
+export async function signOutAction() {
+  // Create a supabase client using subbasessr
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    // console.error('Error signing out:', error)
+  }
+  await redirect('/login')
 }

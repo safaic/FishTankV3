@@ -1,5 +1,4 @@
 'use server'
-
 import { fetchPerameter, createPerameter, updatePerameter, deletePerameter } from '@/app/lib/data';
 import { NextResponse } from 'next/server';
 import { createClient } from '@/app/utils/subabase/server'

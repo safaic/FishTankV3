@@ -2,11 +2,7 @@ import postgres from 'postgres';
 import { PeramTable} from './definitions';
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
-import { createClient } from '@/app/utils/subabase/server'
 
-  // const supabase = await createClient()
-
-  // const { data, error } = await supabase.auth.getUser()
 
 
 export async function fetchPerameter(userID:string) {
@@ -22,7 +18,7 @@ export async function fetchPerameter(userID:string) {
     `;
     return perameters;
   } catch (err) {
-    console.error('Database Error:', err);
+    // console.error('Database Error:', err);
     throw new Error('Failed to fetch perameters.');
   }
 }
@@ -35,7 +31,7 @@ export async function fetchPerameter(userID:string) {
       `;
       return { success: true };
     } catch (err) {
-      console.error('Database Error:', err);
+      // console.error('Database Error:', err);
       throw new Error('Failed to delete perameter.');
     }
   }
@@ -51,7 +47,7 @@ export async function fetchPerameter(userID:string) {
       `;
       return newPerameter[0];
     } catch (err) {
-      console.error('Database Error:', err);
+      // console.error('Database Error:', err);
       throw new Error('Failed to create perameter.');
     }
   }
@@ -72,7 +68,7 @@ export async function fetchPerameter(userID:string) {
       `;
       return updatedPerameter[0];
     } catch (err) {
-      console.error('Database Error:', err);
+      // console.error('Database Error:', err);
       throw new Error('Failed to update perameter.');
     }
   }

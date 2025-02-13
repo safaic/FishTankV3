@@ -1,6 +1,5 @@
 "use client" 
 import * as React from 'react';
-import {users, fish, Peram} from '@/app/lib/placeholder-data';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,8 +7,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
 import { useEffect, useState, useRef } from 'react';
 import { GridFilterModel } from '@mui/x-data-grid'
 import {
@@ -25,12 +22,7 @@ import {
   GridRowModel,
   GridRowEditStopReasons,
   GridSlotProps,
-  GRID_ACTIONS_COLUMN_TYPE,
-  GridValidRowModel,
 } from '@mui/x-data-grid';
-import { abort } from 'process';
-import { idID } from '@mui/material/locale';
-
 import dayjs, { Dayjs } from 'dayjs';
 
 
