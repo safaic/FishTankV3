@@ -318,22 +318,25 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
   // console.error('Error saving row:', error);
 }, []);
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 150, },
-    { field: 'date', headerName: 'Date', width: 150,align: 'left', type: 'date', resizable: false, editable: true,valueFormatter: (value) => {
+    { field: 'id', headerName: 'ID', maxWidth: 100, minWidth:10, },
+    { field: 'date', headerName: 'Date', maxWidth: 100, minWidth:10,align: 'left', type: 'date', headerAlign: 'left'  ,resizable: false, editable: true,valueFormatter: (value) => {
       const date = new Date(value);
       const year = date.getUTCFullYear();
       const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed
       const day = String(date.getUTCDate()).padStart(2, '0');
       return `${month}/${day}/${year}`; // Format date as MM/DD/YYYY
     }, },  
-    { field: 'peram', headerName: 'Parameter', width: 100, valueOptions: ['alk', 'mag', 'ca'], editable: true,resizable: false, type: 'singleSelect' },
-    { field: 'level', headerName: 'Value', width: 100, type: 'number' ,resizable: false,editable: true  },
+    { field: 'peram', headerName: 'Parameter', maxWidth: 100, minWidth:10, valueOptions: ['alk', 'mag', 'ca'], align: 'left', headerAlign: 'left', editable: true,resizable: false, type: 'singleSelect' },
+    { field: 'level', headerName: 'Value', maxWidth: 100, minWidth:10, type: 'number' ,resizable: false,editable: true, align: 'left', headerAlign: 'left' },
     {
       field: 'actions',
+      resizable: false,
       type: 'actions',
       headerName: 'Actions',
-      width: 180,
+      maxWidth: 100, minWidth:10,
       cellClassName: 'actions',
+      headerAlign: 'left',
+      align: 'left',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
        
@@ -382,9 +385,10 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
       
     <Box 
       sx= {{
-        height: '100%',
-        width: '100%',
-        
+ 
+      height: { xs: 300, sm: 400, md: 500 }, // Responsive heights
+      position: 'relative',
+         
         '& .actions': {
           color: 'text.secondary',
         },
@@ -396,7 +400,8 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
       <DataGrid  
       sx= {{
         height: '100%',
-        width: '75%',
+        width: '100%',
+   
         
         '& .actions': {
           color: 'text.secondary',
@@ -418,6 +423,9 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
             items: [],
           },
         },
+        sorting: {
+          sortModel: [{ field: 'id', sort: 'desc' }],
+        },
       }}
         rows={rows}
         columns={columns}
@@ -428,7 +436,7 @@ const handleProcessRowUpdateError = React.useCallback((error: Error) => {
         processRowUpdate={processRowUpdate}
         onProcessRowUpdateError={handleProcessRowUpdateError}
         slots={{ toolbar: EditToolbar }}
-        slotProps={{
+        slotProps={{ 
           toolbar: { setRows, setRowModesModel, rowModesModel, rows },
         }}
         

@@ -3,9 +3,7 @@ import { PeramTable} from './definitions';
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 
-
-
-export async function fetchPerameter(userID:string) {
+export async function fetchParameter(userID:string) {
   try {
     const perameters = await sql<PeramTable[]>`
       SELECT 
@@ -23,7 +21,7 @@ export async function fetchPerameter(userID:string) {
   }
 }
 
-  export async function deletePerameter(id: number, userID:string ) {
+  export async function deleteParameter(id: number, userID:string ) {
     try {
       await sql`
         DELETE FROM "tbl_Peram" 
@@ -36,7 +34,7 @@ export async function fetchPerameter(userID:string) {
     }
   }
 
-  export async function createPerameter(
+  export async function createParameter(
     data: { date: Date; peram: string; level: number }, userID: string
   ) {
     try {
@@ -52,7 +50,7 @@ export async function fetchPerameter(userID:string) {
     }
   }
   
-  export async function updatePerameter(
+  export async function updateParameter(
     data: { id: number; date: Date; peram: string; level: number }, userID: string
   ) {
     try {
