@@ -7,7 +7,6 @@
 //   // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
 //   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
 import { type NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
 import { updateSession } from '@/app/utils/subabase/middleware'
 
 export async function middleware(request: NextRequest) {

@@ -5,19 +5,17 @@ import { Box } from '@mui/material';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { useState, useEffect } from 'react';
-
+import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 interface ChartData {
   date: Date;
   peram: string;
   level: number;
 }
 interface LineChartProps {
-  width?: number;
-  height?: number;
   data: ChartData[];
 }
 
-export default function ReusableLineChart({ width = 500, height = 300, data }: LineChartProps) {
+export default function ReusableLineChart({ data }: LineChartProps) {
   const [chartData, setChartData] = useState<{
     dates: number[];
     alkLevels: (number | null)[];
@@ -46,7 +44,10 @@ export default function ReusableLineChart({ width = 500, height = 300, data }: L
   }, [data]);
 
   return (
-    <Box sx={{ width: '100%', height: '100%' }}>
+    <Box sx={{    width: '100%',
+      height: { xs: 300, sm: 400, md: 500 }, // Responsive heights
+      position: 'relative'}}>
+    
       <LineChart
         xAxis={[{
           data: chartData.dates,
@@ -76,8 +77,7 @@ export default function ReusableLineChart({ width = 500, height = 300, data }: L
             connectNulls: true,
           }
         ]}
-        width={width}
-        height={height}
+     
         slotProps={{
           legend: {        
             position: {
@@ -91,6 +91,8 @@ export default function ReusableLineChart({ width = 500, height = 300, data }: L
           }
         }}
       />
+
+   
     </Box>
   );
 }

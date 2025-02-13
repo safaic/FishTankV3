@@ -12,6 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Skeleton from '@mui/material/Skeleton';
 import { RevenueChartSkeleton} from '@/app/ui/skeleton';
+import React, { useRef, useEffect } from 'react';
 
 const PerameterChart = dynamic(
   () => import('@/app/ui/dashboard/peramchart'),
@@ -62,41 +63,45 @@ export default function Page() {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  
   return (
     <main>
 
    
-      <Box className="min-h-screen bg-gray-200 py-8">
-        <Container maxWidth="lg">
-          <Paper elevation={3} className="bg-gray-200 p-6 mb-6">
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', minWidth: '800px' }}>
+      <Box className="min-h-screen bg-gray-200 py-8" boxSizing={'border-box'} maxWidth={'100%'}>
+        <Container className="flex flex-col gap-6">
+          <Paper elevation={3} className="bg-gray-200 p-6 mb-6 overflow-scroll">
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', minWidth: '100px',boxShadow: 1, p: 2, borderRadius: 1 }}  >
             <Suspense fallback={<Skeleton />}>
      
         
-                <ReusableLineChart key={refreshTrigger} data={chartData} />
+                <ReusableLineChart key={refreshTrigger} data={chartData}  />
               
             </Suspense>
             </Box>
           </Paper>
 
-     
-          <Paper elevation={3} className="bg-gray-200 p-6 mb-6">
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', minWidth: '800px' }}>
-              <Box sx={{ flex: 1 }}>
+     <div> 
+
+    
+          <Paper elevation={3} className="bg-gray-200 p-6 mb-6 overflow-scroll "      >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', boxSizing: 'border-box' }}>
+              <Box sx={{ flex: 1, maxWidth: '600px',boxSizing: 'border-box',boxShadow: 1, p: 2, borderRadius: 1 }}>
               <Suspense fallback={<RevenueChartSkeleton />}> 
                   <PerameterChart onDataChange={handleDataChange} startDate={startDate} endDate={endDate} peramValue={perameter} />
                 </Suspense>
               </Box>
               <Box sx={{ ml: 2 }}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, boxShadow: 1, p: 2, borderRadius: 1 }}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Box display="flex" flexDirection="column" gap={2}>
-                      <DatePicker 
+                      <DatePicker  
                         label="Start Date"  
                         value={startDate}
                         onChange={handleStartDateChange}
                       />
                       <DatePicker 
+                      
                         label="End Date" 
                         value={endDate}
                         onChange={handleEndDateChange}
@@ -120,13 +125,14 @@ export default function Page() {
                       </MenuItem>
                       <MenuItem value={'alk'}>Alkinity</MenuItem>
                       <MenuItem value={'mag'}>Magnesium</MenuItem>
-                      <MenuItem value={'Calcium'}>Calcium</MenuItem>
+                      <MenuItem value={'ca'}>Calcium</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
               </Box>
             </Box>
           </Paper>
+           </div>
         
         </Container>
         
