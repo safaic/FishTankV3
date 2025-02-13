@@ -37,12 +37,12 @@ export async function fetchPerameter(userID:string) {
   }
 
   export async function createPerameter(
-    data: { date: Date; peram: string; level: number }
+    data: { date: Date; peram: string; level: number }, userID: string
   ) {
     try {
       const newPerameter = await sql<PeramTable[]>`
         INSERT INTO "tbl_Peram" (test_date, category, value)
-        VALUES (${data.date}, ${data.peram}, ${data.level})
+        VALUES (${data.date}, ${data.peram}, ${data.level}, ${userID})
         RETURNING id, test_date as date, category as peram, value as level
       `;
       return newPerameter[0];
