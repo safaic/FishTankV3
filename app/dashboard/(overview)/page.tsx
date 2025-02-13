@@ -98,6 +98,10 @@ export interface ChartData {
 }
 
 export default function Page() {
+
+
+
+  
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
@@ -137,8 +141,6 @@ export default function Page() {
     <main>
 <ThemeProvider theme={theme}> 
 
-
-   
       <Box className="min-h-screen dark:bg-[#121212] py-8" boxSizing={'border-box'} maxWidth={'100%'}>
         <Container className=" dark:bg-[#121212] rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5">
           <Paper elevation={3} className="bg-gray-800 p-6 mb-6 overflow-auto">
