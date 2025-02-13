@@ -1,7 +1,6 @@
 
 'use client'
 import Link from 'next/link';
-import styles from '@/app/ui/home.module.css';
 import { lusitana } from  '@/app/ui/fonts';
 
 export default function Page() {
@@ -21,7 +20,6 @@ export default function Page() {
        <p className={`${lusitana.className} antialiased text-xl text-gray-100 md:text-3xl md:leading-normal`}>
        <strong>Welcome to the one and only Fish Perameter Tracker, </strong>
             brought to you by Cameron Safai.
-
        </p>
        <Link
          href="/login"
@@ -31,7 +29,7 @@ export default function Page() {
        </Link>
      </div>
      <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-       {/* Add Hero Images Here */}
+      
 
 
 
