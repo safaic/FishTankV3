@@ -19,8 +19,8 @@ export default function Page() {
      />
      <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
        <p className={`${lusitana.className} antialiased text-xl text-gray-100 md:text-3xl md:leading-normal`}>
-       <strong>Welcome to Fish Perameter Tracker, </strong> 
-            brought to you by Cameron Safai.
+       {/* <strong>Welcome to Fish Perameter Tracker, </strong> 
+            brought to you by Cameron Safai. */}
 
        </p>
        <Link
