@@ -1,23 +1,20 @@
-'use client';
- 
-import { lusitana } from '@/app/ui/fonts';
-import {
-  AtSymbolIcon,
-  KeyIcon,
-} from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { Button } from '@/app/ui/button';
-import { useState } from 'react';
-import { login } from '@/app/login/actions'
+"use client";
+
+import { lusitana } from "@/app/ui/fonts";
+import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon } from "@heroicons/react/20/solid";
+import { Button } from "@/app/ui/button";
+import { useState } from "react";
+import { login } from "@/app/login/actions";
 
 export default function LoginForm() {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   async function handleSubmit(formData: FormData) {
     const result = await login(formData);
     console.log(result);
     if (result) {
-      setError('Invalid credentials.');
+      setError("Invalid credentials.");
     }
   }
   return (
@@ -26,11 +23,7 @@ export default function LoginForm() {
         <h1 className={`${lusitana.className} mb-3 text-2xl `}>
           Please log in to continue.
         </h1>
-        {error && (
-          <div className="mb-4 text-sm text-red-500">
-            {error}
-          </div>
-        )}
+        {error && <div className="mb-4 text-sm text-red-500">{error}</div>}
         <div className="w-full  ">
           <div>
             <label
@@ -72,26 +65,26 @@ export default function LoginForm() {
             </div>
           </div>
         </div>
-        <input type="hidden" name="redirectTo"  />
+        <input type="hidden" name="redirectTo" />
         <div className="flex flex-col items-center ">
-          <Button className="mt-4 w-full" >
+          <Button className="mt-4 w-full">
             Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
           </Button>
-        
         </div>
-      
-            <div className="flex flex-col items-center"> 
-                    <Button 
-                className="mt-4 w-1/2 bg-green-500 hover:bg-green-600" 
-                type="button" // Add this to prevent form submission
-                onClick={() => {
-                  // Add your create account logic here
-                  window.location.href = '/login/signup'; // or your signup route
-                }}
-              >
-                Create Account <ArrowRightIcon className="ml-2 h-4 w-4 text-gray-50" />
-              </Button>
-            </div>
+
+        <div className="flex flex-col items-center">
+          <Button
+            className="mt-4 w-1/2 bg-green-500 hover:bg-green-600"
+            type="button" // Add this to prevent form submission
+            onClick={() => {
+              // Add your create account logic here
+              window.location.href = "/login/signup"; // or your signup route
+            }}
+          >
+            Create Account{" "}
+            <ArrowRightIcon className="ml-2 h-4 w-4 text-gray-50" />
+          </Button>
+        </div>
       </div>
     </form>
   );
