@@ -95,6 +95,7 @@ export interface ChartData {
   date: any;
   peram: string;
   level: number;
+
 }
 
 export default function Page() {
@@ -102,7 +103,7 @@ export default function Page() {
 
 
   
-  const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [chartData, setChartData] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
@@ -131,7 +132,7 @@ export default function Page() {
    console.log(formatDate(newValue));
   };
 
-  const handleDataChange = (data: ChartData[]) => {
+  const handleDataChange = (data: any) => {
     setChartData(data);
     setRefreshTrigger(prev => prev + 1);
   };

@@ -7,23 +7,30 @@ import {
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/app/ui/button';
-
+import { useState } from 'react';
 import { login } from '@/app/login/actions'
 
 export default function LoginForm() {
-  // const searchParams = useSearchParams();
-  // const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
-  // const [errorMessage, formAction, isPending] = useActionState(
-  //   authenticate,
-  //   undefined,
-  // );
- 
+  const [error, setError] = useState('');
+
+  async function handleSubmit(formData: FormData) {
+    const result = await login(formData);
+    console.log(result);
+    if (result) {
+      setError('Invalid credentials.');
+    }
+  }
   return (
-    <form action={login} className="space-y-3 ">
+    <form action={handleSubmit} className="space-y-3 ">
       <div className="flex-1 rounded-lg px-6 pb-4 pt-8  ">
         <h1 className={`${lusitana.className} mb-3 text-2xl `}>
           Please log in to continue.
         </h1>
+        {error && (
+          <div className="mb-4 text-sm text-red-500">
+            {error}
+          </div>
+        )}
         <div className="w-full  ">
           <div>
             <label

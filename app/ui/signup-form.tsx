@@ -1,5 +1,5 @@
 'use client';
-
+import Link from 'next/link';
 import { useState } from 'react';
 import { lusitana } from '@/app/ui/fonts';
 import {
@@ -11,7 +11,9 @@ import { Button } from '@/app/ui/button';
 import {signup } from '@/app/login/actions'
 
 export default function SignUpForm() {
+ const [registerComplete, setregisterComplete] = useState(false);
  
+   
 const[password, setPassword] = useState('')
 const[passwordMatch, setPasswordMatch] = useState(false)
 const validatePassword = (confirmValue: string) => {
@@ -30,24 +32,15 @@ const validatePassword = (confirmValue: string) => {
    console.log(a);
 
    
-  //setIsButtonEnabled(a);
 
-
-
-  // export default function LoginPage() {
-//   return (
-//     <form>
-//       <label htmlFor="email">Email:</label>
-//       <input id="email" name="email" type="email" required />
-//       <label htmlFor="password">Password:</label>
-//       <input id="password" name="password" type="password" required />
-//       {/* <button formAction={login}>Log in</button> */}
-//       <button formAction={signup}>Sign up</button>
-//     </form>
-//   )
-// }
  }
- 
+ async function handleSubmit(formData: FormData) {
+  const result = await signup(formData);
+  console.log(result);
+  if (result) {
+    setregisterComplete(true);
+  }
+}
  return (
        <form className="space-y-3"  
     >
@@ -140,23 +133,42 @@ const validatePassword = (confirmValue: string) => {
        
       
             <div className="flex flex-col items-center"> 
-<Button 
-  className={`mt-4 ${
-    passwordMatch 
-      ? 'bg-green-500 hover:bg-green-600' 
-      : 'bg-gray-400 cursor-not-allowed'
-  }`}
-  type="submit"
-  disabled={!passwordMatch}
-  formAction={signup}
-  
-  // onClick={() => {
-  //   window.location.href = '/signup';
-  // }}
->
-                Create Account 
-              </Button>
+                  <Button 
+                    className={`mt-4 ${
+                      passwordMatch 
+                        ? 'bg-green-500 hover:bg-green-600' 
+                        : 'bg-gray-400 cursor-not-allowed'
+                    }`}
+                    type="submit"
+                    disabled={!passwordMatch}
+                    formAction={handleSubmit}
+                    
+                  
+                
+                  >
+                                  Create Account 
+                                </Button>
+       
             </div>
+
+            
+      
+            <div className="flex flex-col items-center">
+  {registerComplete && (
+    <Button 
+      className="mt-4 bg-blue-500 hover:bg-green-600"
+      type="submit"
+
+        onClick={() => {
+                      window.location.href = '/login';
+                    }}
+
+    >
+      Verify Email: Click to Login
+    </Button>
+  )}
+</div>
+      
       </div>
     </form>
 //   );
