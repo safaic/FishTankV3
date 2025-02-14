@@ -19,7 +19,7 @@ const eslintConfig = [
       "prefer-const": "warn",
       "react-hooks/exhaustive-deps": "off",
       "react/jsx-key": "warn",
-      "no-var": "warn"
+      "no-var": "warn",
     },
     overrides: [
       {
@@ -27,11 +27,11 @@ const eslintConfig = [
         rules: {
           "@typescript-eslint/no-unused-vars": "off",
           "@typescript-eslint/no-explicit-any": "off",
-          "no-console": "off"
-        }
-      }
-    ]
-  }
+          "no-console": "off",
+        },
+      },
+    ],
+  },
 ];
 
 export default eslintConfig;
