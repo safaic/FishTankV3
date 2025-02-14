@@ -138,11 +138,7 @@ export default function Page() {
   return (
     <main>
       <ThemeProvider theme={theme}>
-        <Box
-          className="min-h-screen dark:bg-[#121212] py-8"
-          boxSizing={"border-box"}
-          maxWidth={"100%"}
-        >
+       
           <Container
             className=" dark:bg-[#121212] rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5"
             maxWidth={deviceType === "mobile" ? false : "xl"}
@@ -157,7 +153,9 @@ export default function Page() {
                   boxShadow: 1,
                   p: 2,
                   borderRadius: 1,
+                  
                 }}
+                
               >
                 <Suspense fallback={<Skeleton />}>
                   <ReusableLineChart key={refreshTrigger} data={chartData} />
@@ -166,7 +164,7 @@ export default function Page() {
             </Paper>
 
             <div>
-              <Paper elevation={3} className="p-6 mb-6 overflow-auto">
+              <Paper elevation={3} className="p-6 mb-6 overflow-auto" >
                 <Box
                   sx={{
                     display: "flex",
@@ -197,14 +195,19 @@ export default function Page() {
                   <Box sx={{ ml: 2 }}>
                     <Box
                       sx={{
-                        display: "flex",
+                        display: { 
+                          xs: 'none',     // hidden on mobile
+                          sm: 'flex'      // flex layout on larger screens
+                        },
                         flexDirection: "column",
                         gap: 1,
                         boxShadow: 1,
                         p: 2,
                         borderRadius: 1,
+                        
                       }}
                     >
+               
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <Box display="flex" flexDirection="column" gap={2}>
                           <DatePicker
@@ -246,7 +249,7 @@ export default function Page() {
               </Paper>
             </div>
           </Container>
-        </Box>
+  
       </ThemeProvider>
     </main>
   );
