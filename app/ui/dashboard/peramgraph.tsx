@@ -64,7 +64,11 @@ export default function ReusableLineChart({ data }: LineChartProps) {
 
   useEffect(() => {
     if (data.length > 0) {
-      processData();
+      const timer = setTimeout(() => {
+        processData();
+      }, 50);
+  
+      return () => clearTimeout(timer);
     }
   }, [data]);
 
