@@ -67,7 +67,7 @@ export default function ReusableLineChart({ data }: LineChartProps) {
       const timer = setTimeout(() => {
         processData();
       }, 50);
-  
+
       return () => clearTimeout(timer);
     }
   }, [data]);

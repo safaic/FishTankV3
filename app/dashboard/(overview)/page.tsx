@@ -16,6 +16,17 @@ import React, { useRef, useEffect } from "react";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
+function getDeviceType() {
+  const userAgent = navigator.userAgent;
+  if (/Mobile|Android|iPhone|iPad/i.test(userAgent)) {
+    return "mobile";
+  } else {
+    return "desktop";
+  }
+}
+
+const deviceType = getDeviceType();
+
 const theme = createTheme({
   breakpoints: {
     values: {
@@ -132,7 +143,10 @@ export default function Page() {
           boxSizing={"border-box"}
           maxWidth={"100%"}
         >
-          <Container className=" dark:bg-[#121212] rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5">
+          <Container
+            className=" dark:bg-[#121212] rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5"
+            maxWidth={deviceType === "mobile" ? false : "xl"}
+          >
             <Paper elevation={3} className="bg-gray-800 p-6 mb-6 overflow-auto">
               <Box
                 sx={{
@@ -164,14 +178,14 @@ export default function Page() {
                   <Box
                     sx={{
                       flex: 1,
-                      maxWidth: "600px",
+                      maxWidth: "900px",
                       boxSizing: "border-box",
                       boxShadow: 1,
                       p: 2,
                       borderRadius: 1,
                     }}
                   >
-                    <Suspense fallback={<RevenueChartSkeleton />}>
+                    <Suspense>
                       <PerameterChart
                         onDataChange={handleDataChange}
                         startDate={startDate}

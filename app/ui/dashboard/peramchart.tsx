@@ -308,12 +308,12 @@ export default function PerameterChart({
     // console.error('Error saving row:', error);
   }, []);
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", maxWidth: 100, minWidth: 10 },
+    { field: "id", headerName: "ID", flex: 1, minWidth: 10 },
     {
       field: "date",
-      headerName: "Date",
-      maxWidth: 100,
+      flex: 1,
       minWidth: 10,
+      headerName: "Date",
       align: "left",
       type: "date",
       headerAlign: "left",
@@ -330,7 +330,7 @@ export default function PerameterChart({
     {
       field: "peram",
       headerName: "Parameter",
-      maxWidth: 100,
+      flex: 1,
       minWidth: 10,
       valueOptions: ["alk", "mag", "ca"],
       align: "left",
@@ -342,7 +342,7 @@ export default function PerameterChart({
     {
       field: "level",
       headerName: "Value",
-      maxWidth: 100,
+      flex: 1,
       minWidth: 10,
       type: "number",
       resizable: false,
@@ -355,7 +355,7 @@ export default function PerameterChart({
       resizable: false,
       type: "actions",
       headerName: "Actions",
-      maxWidth: 100,
+      flex: 1,
       minWidth: 10,
       cellClassName: "actions",
       headerAlign: "left",
@@ -454,9 +454,9 @@ export default function PerameterChart({
             },
             columns: {
               columnVisibilityModel: {
-                id: false
-              }
-            }
+                id: false,
+              },
+            },
           }}
         />
       )}
