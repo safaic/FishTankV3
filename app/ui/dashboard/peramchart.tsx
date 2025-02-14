@@ -452,6 +452,11 @@ export default function PerameterChart({
             sorting: {
               sortModel: [{ field: "id", sort: "desc" }],
             },
+            columns: {
+              columnVisibilityModel: {
+                id: false
+              }
+            }
           }}
         />
       )}
