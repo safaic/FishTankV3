@@ -54,7 +54,7 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
       ]);
       setRowModesModel((oldModel) => ({
         ...oldModel,
-        [id]: { mode: GridRowModes.Edit, fieldToFocus: "peram" },
+        [id]: { mode: GridRowModes.Edit, fieldToFocus: "date" },
       }));
     } else {
       alert("Only Add One Record at a Time");
@@ -82,18 +82,19 @@ interface PerameterChartProps {
   startDate: Dayjs | null;
   endDate: Dayjs | null;
   peramValue: string | null;
+  deviceType: string;
 }
 export default function PerameterChart({
   onDataChange,
   startDate,
   endDate,
   peramValue,
+  deviceType,
 }: PerameterChartProps) {
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({
-    items: [],
-  });
   const [originalRows, setOriginalRows] = useState<GridRowsProp>([]);
   const [skeletonController, setSkeletonController] = useState(true);
+
+  const userAgent = deviceType;
 
   const formatDate = (value: any) => {
     const date = new Date(value);
@@ -101,18 +102,6 @@ export default function PerameterChart({
     const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const day = String(date.getUTCDate()).padStart(2, "0");
     return `${month}/${day}/${year}`;
-  };
-
-  const handleFilterChange = (model: GridFilterModel) => {
-    setFilterModel(model);
-    model.items.forEach((item) => {
-      if (item.field === "date") {
-        console.log("Date Filter:", formatDate(item.value));
-      } else {
-        console.log("Filter:", item.field, item.value);
-      }
-    });
-    console.log("Filter Model:", model);
   };
 
   const [rows, setRows] = React.useState<GridRowsProp>([]);
@@ -209,10 +198,10 @@ export default function PerameterChart({
     }
   };
 
-  const handleDeleteClick = (id: GridRowId) => async () => {
-    await processRowDelete(id);
-    await fetchData(); // Refresh after delete
-  };
+  // const handleDeleteClick = (id: GridRowId) => async () => {
+  //   await processRowDelete(id);
+  //   await fetchData(); // Refresh after delete
+  // };
 
   const handleCancelClick = (id: GridRowId) => () => {
     const rowCheck = rows.find((row) => row.id === id);
@@ -316,7 +305,7 @@ export default function PerameterChart({
       headerName: "Date",
       align: "left",
       type: "date",
-      headerAlign: "left",
+      headerAlign: "center",
       resizable: false,
       editable: true,
       valueFormatter: (value) => {
@@ -334,7 +323,7 @@ export default function PerameterChart({
       minWidth: 10,
       valueOptions: ["alk", "mag", "ca"],
       align: "left",
-      headerAlign: "left",
+      headerAlign: "center",
       editable: true,
       resizable: false,
       type: "singleSelect",
@@ -348,7 +337,7 @@ export default function PerameterChart({
       resizable: false,
       editable: true,
       align: "left",
-      headerAlign: "left",
+      headerAlign: "center",
     },
     {
       field: "actions",
@@ -358,8 +347,8 @@ export default function PerameterChart({
       flex: 1,
       minWidth: 10,
       cellClassName: "actions",
-      headerAlign: "left",
-      align: "left",
+      headerAlign: "center",
+      align: "center",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
@@ -429,6 +418,22 @@ export default function PerameterChart({
           sx={{
             height: "100%",
             width: "100%",
+            fontSize: "0.75rem",
+            "& .MuiDataGrid-columnHeader": {
+              padding: "0 8px",
+              justifyContent: "center",
+              textAlign: "center",
+            },
+            "& .MuiDataGrid-columnHeaderTitle": {
+              fontSize: "0.75rem",
+              fontWeight: "bold",
+              width: "100%",
+              textAlign: "center",
+            },
+            "& .MuiDataGrid-cell": {
+              padding: "0 8px",
+              textAlign: "center",
+            },
             "& .actions": {
               color: "text.secondary",
             },
@@ -439,6 +444,8 @@ export default function PerameterChart({
           rows={rows}
           columns={columns}
           editMode="row"
+          disableColumnMenu={userAgent === "mobile" ? true : false}
+          disableColumnSorting={userAgent === "mobile" ? true : false}
           rowModesModel={rowModesModel}
           onRowModesModelChange={handleRowModesModelChange}
           onRowEditStop={handleRowEditStop}
