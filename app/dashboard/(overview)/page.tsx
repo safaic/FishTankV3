@@ -158,7 +158,7 @@ export default function Page() {
                 },
               }
             : {
-                width: "80%",
+                width: "85%",
                 display: "flex",
                 flexDirection: "column",
                 padding: 10,
@@ -190,7 +190,7 @@ export default function Page() {
             }}
           >
             <Suspense fallback={<Skeleton />}>
-              <ReusableLineChart key={refreshTrigger} data={chartData} />
+              <ReusableLineChart key={refreshTrigger} data={chartData}   />
             </Suspense>
           </Box>
         </Paper>
