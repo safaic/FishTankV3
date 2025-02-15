@@ -13,18 +13,32 @@ interface ChartData {
   alkLevels: number[];
   magLevels: number[];
   caLevels: number[];
+  
 }
 interface LineChartProps {
   data: ChartData[];
+
+}
+function getDeviceType() {
+  const userAgent = navigator.userAgent;
+  if (/Mobile|Android|iPhone|iPad/i.test(userAgent)) {
+    return "mobile";
+  } else {
+    return "desktop";
+  }
 }
 
+const deviceType = getDeviceType();
+
 export default function ReusableLineChart({ data }: LineChartProps) {
+  
   const [skeletonController, setSkeletonController] = useState(true);
   const [chartData, setChartData] = useState<ChartData>({
     dates: [],
     alkLevels: [],
     magLevels: [],
     caLevels: [],
+ 
   });
 
   const prepareChartData = (data: any[]) => {
@@ -124,13 +138,13 @@ export default function ReusableLineChart({ data }: LineChartProps) {
             legend: {
               position: {
                 vertical: "top",
-                horizontal: "right",
+                horizontal: deviceType === "mobile" ? "right" : "right"
               },
-              itemMarkWidth: 20,
+              itemMarkWidth: deviceType === "mobile" ? 15 : 20,
               itemMarkHeight: 2,
-              markGap: 5,
-              itemGap: 10,
-            },
+              markGap: deviceType === "mobile" ? 3 : 5,
+              itemGap: deviceType === "mobile" ? 8 : 10,
+            }
           }}
         />
       )}

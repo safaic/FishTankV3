@@ -18,10 +18,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <SideNav />
       </div>
       <div
-        className="flex-grow p-6 md:overflow-y-auto md:p-12 bg-gray-900 text-gray-100 dark:bg-[#121212]"
+        className="flex-grow p-6 md:overflow-y-auto md:p-12 bg-gray-900 text-gray-100 dark:bg-[#121212] rounded-2xl  "
         style={
           deviceType === "mobile"
-            ? { width: "100%", padding: "0" }
+            ? { width: "100%", padding: "0", margin: "0", position: "relative"  }
             : { width: "auto" }
         }
       >
