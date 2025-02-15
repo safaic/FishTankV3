@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
-import { Box, Container, Paper } from "@mui/material";
+import { Box, Container, Paper, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
@@ -11,7 +11,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Skeleton from "@mui/material/Skeleton";
-import { RevenueChartSkeleton } from "@/app/ui/skeleton";
 import React, { useRef, useEffect } from "react";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -136,121 +135,193 @@ export default function Page() {
   };
 
   return (
-    <main>
-      <ThemeProvider theme={theme}>
-       
-          <Container
-            className=" dark:bg-[#121212] rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5"
-            maxWidth={deviceType === "mobile" ? false : "xl"}
+    <ThemeProvider theme={theme}>
+      <Box
+        className=" dark:bg-[#121212] rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5"
+        sx={
+          deviceType === "mobile"
+            ? {
+                width: "100%",
+                maxWidth: "414px",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                padding: 0,
+                margin: 0,
+                "& > *": {
+                  maxWidth: "100%",
+                  width: "100%",
+                  maxHeight: "100%",
+                  overflow: "auto",
+                  margin: 0,
+                  padding: 0,
+                },
+              }
+            : {
+                width: "80%",
+                display: "flex",
+                flexDirection: "column",
+                padding: 10,
+              }
+        }
+      >
+        {deviceType !== "mobile" && (
+          <Typography
+            variant="h4"
+            sx={{
+              p: 2,
+              textAlign: "left",
+              fontWeight: "bold",
+              color: "text.primary",
+            }}
           >
-            <Paper elevation={3} className="bg-gray-800 p-6 mb-6 overflow-auto">
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  minWidth: "100px",
-                  boxShadow: 1,
-                  p: 2,
-                  borderRadius: 1,
-                  
-                }}
-                
-              >
-                <Suspense fallback={<Skeleton />}>
-                  <ReusableLineChart key={refreshTrigger} data={chartData} />
-                </Suspense>
-              </Box>
-            </Paper>
+            Parameter Dashboard
+          </Typography>
+        )}
+        <Paper elevation={3} className="bg-gray-800 p-6 mb-6 overflow-auto">
+          <Box
+            sx={{
+              flex: 1,
+              overflow: "auto",
+              maxHeight: "100vh",
+              maxWidth: "100%",
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            <Suspense fallback={<Skeleton />}>
+              <ReusableLineChart key={refreshTrigger} data={chartData} />
+            </Suspense>
+          </Box>
+        </Paper>
 
-            <div>
-              <Paper elevation={3} className="p-6 mb-6 overflow-auto" >
-                <Box
-                  sx={{
+        <Paper elevation={3} className="p-6 mb-6 overflow-auto">
+          <Box
+            sx={
+              deviceType === "mobile"
+                ? {
+                    width: "100%",
+                    maxWidth: {
+                      xs: "414px",
+                      sm: "100%",
+                    },
+                    height: {
+                      xs: "100vh",
+                      sm: "100%",
+                    },
+                    display: "flex",
+                    flexDirection: "column",
+                    padding: 0, // Remove padding
+                    margin: 0, // Remove margin
+                    "& > *": {
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      overflow: "auto",
+                      margin: 0, // Remove child margins
+                      padding: 0, // Remove child padding
+                    },
+                  }
+                : {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "flex-start",
                     boxSizing: "border-box",
-                  }}
-                >
-                  <Box
-                    sx={{
+                  }
+            }
+          >
+            <Box
+              sx={
+                deviceType === "mobile"
+                  ? {
+                      width: "100%",
+                      maxWidth: "414px",
+                      height: "100vh",
+                      display: "flex",
+                      flexDirection: "column",
+                      padding: 0,
+                      margin: 0,
+                      "& > *": {
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        overflow: "auto",
+                        margin: 0,
+                        padding: 0,
+                      },
+                    }
+                  : {
                       flex: 1,
                       maxWidth: "900px",
                       boxSizing: "border-box",
                       boxShadow: 1,
                       p: 2,
                       borderRadius: 1,
-                    }}
+                    }
+              }
+            >
+              <Suspense>
+                <PerameterChart
+                  onDataChange={handleDataChange}
+                  startDate={startDate}
+                  endDate={endDate}
+                  peramValue={perameter}
+                  deviceType={deviceType}
+                />
+              </Suspense>
+            </Box>
+            <Box sx={{ ml: 2 }}>
+              <Box
+                sx={{
+                  display: {
+                    xs: "none", // hidden on mobile
+                    sm: "flex", // flex layout on larger screens
+                  },
+                  flexDirection: "column",
+                  gap: 1,
+                  boxShadow: 1,
+                  p: 2,
+                  borderRadius: 1,
+                }}
+              >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Box display="flex" flexDirection="column" gap={2}>
+                    <DatePicker
+                      label="Start Date"
+                      value={startDate}
+                      onChange={handleStartDateChange}
+                    />
+                    <DatePicker
+                      label="End Date"
+                      value={endDate}
+                      onChange={handleEndDateChange}
+                      disabled={!startDate}
+                      minDate={startDate || undefined}
+                    />
+                  </Box>
+                </LocalizationProvider>
+                <FormControl sx={{ minWidth: 120 }}>
+                  <InputLabel id="demo-simple-select-helper-label">
+                    Element Selection
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    value={perameter}
+                    label="Element Selection"
+                    onChange={handlePeramFilterChange}
                   >
-                    <Suspense>
-                      <PerameterChart
-                        onDataChange={handleDataChange}
-                        startDate={startDate}
-                        endDate={endDate}
-                        peramValue={perameter}
-                      />
-                    </Suspense>
-                  </Box>
-                  <Box sx={{ ml: 2 }}>
-                    <Box
-                      sx={{
-                        display: { 
-                          xs: 'none',     // hidden on mobile
-                          sm: 'flex'      // flex layout on larger screens
-                        },
-                        flexDirection: "column",
-                        gap: 1,
-                        boxShadow: 1,
-                        p: 2,
-                        borderRadius: 1,
-                        
-                      }}
-                    >
-               
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <Box display="flex" flexDirection="column" gap={2}>
-                          <DatePicker
-                            label="Start Date"
-                            value={startDate}
-                            onChange={handleStartDateChange}
-                          />
-                          <DatePicker
-                            label="End Date"
-                            value={endDate}
-                            onChange={handleEndDateChange}
-                            disabled={!startDate}
-                            minDate={startDate || undefined}
-                          />
-                        </Box>
-                      </LocalizationProvider>
-                      <FormControl sx={{ minWidth: 120 }}>
-                        <InputLabel id="demo-simple-select-helper-label">
-                          Element Selection
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-helper-label"
-                          id="demo-simple-select-helper"
-                          value={perameter}
-                          label="Element Selection"
-                          onChange={handlePeramFilterChange}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={"alk"}>Alkinity</MenuItem>
-                          <MenuItem value={"mag"}>Magnesium</MenuItem>
-                          <MenuItem value={"ca"}>Calcium</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Box>
-                  </Box>
-                </Box>
-              </Paper>
-            </div>
-          </Container>
-  
-      </ThemeProvider>
-    </main>
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={"alk"}>Alkinity</MenuItem>
+                    <MenuItem value={"mag"}>Magnesium</MenuItem>
+                    <MenuItem value={"ca"}>Calcium</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+    </ThemeProvider>
   );
 }
